@@ -1,7 +1,7 @@
 using NUnit.Framework;
-using System;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
 
 namespace Finbourne.Notifications.Sdk.Extensions.Tests
 {
@@ -11,7 +11,24 @@ namespace Finbourne.Notifications.Sdk.Extensions.Tests
         [Test]
         public void Constructor_NonNull_Instance_Returned()
         {
-            var tokenProvider = new ClientCredentialsFlowTokenProvider(ApiConfigurationBuilder.Build("dummy-test-secrets.json"));
+            var secretsFile = Path.GetTempFileName();
+            var secrets = new Dictionary<string, object>
+            {
+                ["api"] = new Dictionary<string, string>()
+                {
+                    {"apiUrl", "https://sub-domain.lusid.com/api"},
+                    {"tokenUrl", "https://sub-domain.okta.com/oauth2/abcd123/v1/token"},
+                    {"clientId", "<clientId>"},
+                    {"clientSecret", "<clientSecret>"},
+                    {"applicationName", "<applicationName>"},
+                    {"username", "<username>"},
+                    {"password", "<password>"},
+                }
+            };
+            var json = JsonSerializer.Serialize(secrets);
+            File.WriteAllText(secretsFile, json);
+
+            var tokenProvider = new ClientCredentialsFlowTokenProvider(ApiConfigurationBuilder.Build(secretsFile));
             Assert.IsNotNull(tokenProvider);
         }
     }
