@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using System;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;

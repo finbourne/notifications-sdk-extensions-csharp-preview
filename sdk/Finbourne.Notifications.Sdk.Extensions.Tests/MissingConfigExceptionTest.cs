@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 
 namespace Finbourne.Notifications.Sdk.Extensions.Tests
 {

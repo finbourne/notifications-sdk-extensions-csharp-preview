@@ -1,4 +1,4 @@
-﻿using Finbourne.Notifications.Sdk.Client;
+using Finbourne.Notifications.Sdk.Client;
 using NUnit.Framework;
 using System;
 using System.Net;

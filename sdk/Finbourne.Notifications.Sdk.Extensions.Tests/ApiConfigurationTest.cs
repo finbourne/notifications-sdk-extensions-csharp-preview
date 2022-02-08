@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 
@@ -31,6 +31,7 @@ namespace Finbourne.Notifications.Sdk.Extensions.Tests
             config.Username = String.Empty;
             Assert.IsTrue(config.HasMissingConfig());
         }
+
         [Test]
         public void ApiConfiguration_MissingConfig_Missing_Username_Returns_Correct_String()
         {
@@ -48,6 +49,7 @@ namespace Finbourne.Notifications.Sdk.Extensions.Tests
             config.Password = String.Empty;
             Assert.IsTrue(config.HasMissingConfig());
         }
+
         [Test]
         public void ApiConfiguration_MissingConfig_Missing_Password_Returns_Correct_String()
         {
@@ -65,6 +67,7 @@ namespace Finbourne.Notifications.Sdk.Extensions.Tests
             config.ClientId = String.Empty;
             Assert.IsTrue(config.HasMissingConfig());
         }
+
         [Test]
         public void ApiConfiguration_MissingConfig_Missing_ClientId_Returns_Correct_String()
         {
@@ -82,6 +85,7 @@ namespace Finbourne.Notifications.Sdk.Extensions.Tests
             config.ClientSecret = String.Empty;
             Assert.IsTrue(config.HasMissingConfig());
         }
+
         [Test]
         public void ApiConfiguration_MissingConfig_Missing_ClientSecret_Returns_Correct_String()
         {
@@ -99,6 +103,7 @@ namespace Finbourne.Notifications.Sdk.Extensions.Tests
             config.ApiUrl = String.Empty;
             Assert.IsTrue(config.HasMissingConfig());
         }
+
         [Test]
         public void ApiConfiguration_MissingConfig_Missing_ApiUrl_Returns_Correct_String()
         {
@@ -115,6 +120,7 @@ namespace Finbourne.Notifications.Sdk.Extensions.Tests
             ApiConfiguration config = new ApiConfiguration();
             Assert.IsTrue(config.HasMissingConfig());
         }
+
         [Test]
         public void ApiConfiguration_MissingConfig_Missing_Multiple_Properties_Returns_Correct_Strings()
         {
@@ -128,6 +134,7 @@ namespace Finbourne.Notifications.Sdk.Extensions.Tests
         {
             Assert.IsFalse(GetApiConfiguration().HasMissingConfig());
         }
+
         [Test]
         public void ApiConfiguration_MissingConfig_Valid_Config_Returns_Empty_List()
         {

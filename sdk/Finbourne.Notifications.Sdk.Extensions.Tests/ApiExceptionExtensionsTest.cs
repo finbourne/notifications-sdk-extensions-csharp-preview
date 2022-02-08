@@ -1,4 +1,4 @@
-﻿using Finbourne.Notifications.Sdk.Client;
+using Finbourne.Notifications.Sdk.Client;
 using Finbourne.Notifications.Sdk.Model;
 using Newtonsoft.Json;
 using NUnit.Framework;
