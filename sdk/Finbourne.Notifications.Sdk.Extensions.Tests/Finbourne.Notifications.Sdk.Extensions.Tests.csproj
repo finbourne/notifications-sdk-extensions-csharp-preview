@@ -20,9 +20,4 @@
   <ItemGroup>
     <ProjectReference Include="..\Finbourne.Notifications.Sdk.Extensions\Finbourne.Notifications.Sdk.Extensions.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Update="dummy-test-secrets.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
 </Project>
