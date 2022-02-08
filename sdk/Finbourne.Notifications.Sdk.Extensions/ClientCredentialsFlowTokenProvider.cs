@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
@@ -8,9 +7,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Polly;
-using Polly.Retry;
 
 [assembly: InternalsVisibleTo("Finbourne.Notifications.Sdk.Extensions.Tests")]
+[assembly: InternalsVisibleTo("Finbourne.Notifications.Sdk.Extensions.Tutorials")]
 
 namespace Finbourne.Notifications.Sdk.Extensions
 {
