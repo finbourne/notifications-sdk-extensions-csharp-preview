@@ -19,7 +19,7 @@ namespace Finbourne.Notifications.Sdk.Extensions.Tutorials.ExtensionsIntegration
         [Test]
         public void GetRequestId_CanExtract_RequestId()
         {
-            var apiResponse = _factory.Api<ApplicationMetadataApi>().ListAccessControlledResourcesWithHttpInfo();
+            var apiResponse = _factory.Api<EventTypesApi>().GetEventTypeWithHttpInfo("Manual");
             var requestId = apiResponse.GetRequestId();
             StringAssert.IsMatch(RequestIdRegexPattern, requestId);
         }

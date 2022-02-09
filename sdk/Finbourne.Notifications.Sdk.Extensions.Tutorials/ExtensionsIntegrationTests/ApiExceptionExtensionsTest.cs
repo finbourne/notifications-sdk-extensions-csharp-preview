@@ -1,5 +1,4 @@
-﻿/*
-using Finbourne.Notifications.Sdk.Api;
+﻿using Finbourne.Notifications.Sdk.Api;
 using Finbourne.Notifications.Sdk.Client;
 using Finbourne.Notifications.Sdk.Model;
 using Newtonsoft.Json;
@@ -27,13 +26,13 @@ namespace Finbourne.Notifications.Sdk.Extensions.Tutorials.ExtensionIntegrationT
                 "htmlBody",
                 new List<string>() { "to-unknown@unkown.com" }, new List<string>(), new List<string>());
         }
-
+        
         [Test]
-        public void CreateEmailNotification_BadRequest()
+        public void Generate_HttpStatusCode_BadRequest()
         {
             try
             {
-                var _ = _factory.Api<NotificationsApi>().CreateEmailNotification("doesnt", "exist", _emailNotification);
+                _factory.Api<EventsApi>().CreateEvent("$@!-");
             }
             catch (ApiException e)
             {
@@ -42,24 +41,11 @@ namespace Finbourne.Notifications.Sdk.Extensions.Tutorials.ExtensionIntegrationT
         }
 
         [Test]
-        public void GetNotification_NotFound()
-        {
-            try
-            {                
-                var _ = _factory.Api<NotificationsApi>().GetNotification("doesnt", "exist", "no-id");
-            }
-            catch (ApiException e)
-            {
-                Assert.AreEqual((int)HttpStatusCode.NotFound, e.ErrorCode);
-            }
-        }
-
-        [Test]
         public void GetRequestId_MalformedInsightsUrl_ReturnsNull()
         {
             try
             {
-                var _ = _factory.Api<NotificationsApi>().CreateEmailNotification("no-scope", "no-code", _emailNotification);
+                _factory.Api<EventsApi>().CreateEvent("$@!-");
             }
             catch (ApiException e)
             {
@@ -83,13 +69,13 @@ namespace Finbourne.Notifications.Sdk.Extensions.Tutorials.ExtensionIntegrationT
         {
             try
             {
-                var _ = _factory.Api<NotificationsApi>().CreateEmailNotification("no-scope", "no-code", _emailNotification);
+                _factory.Api<EventsApi>().CreateEvent("$@!-");
             }
             catch (ApiException e)
             {
                 //    ApiException.ErrorContent contains a JSON serialized ErrorResponse
                 LusidProblemDetails errorResponse = e.ProblemDetails();
-                Assert.That(errorResponse.Detail, Does.Match("Portfolio with id 'exist' in scope 'doesnt' effective.*not found"));
+                Assert.That(errorResponse.Detail, Does.Match("One or more elements of the request were invalid. Please check that all supplied identifiers are valid and of the correct format, and that all provided data is correctly structured."));
             }
         }
 
@@ -98,13 +84,13 @@ namespace Finbourne.Notifications.Sdk.Extensions.Tutorials.ExtensionIntegrationT
         {
             try
             {
-                var _ = _factory.Api<NotificationsApi>().CreateEmailNotification("no-scope", "no-code", _emailNotification);
+                _factory.Api<NotificationsApi>().CreateEmailNotification("no-scope", "no-code", _emailNotification);
             }
             catch (ApiException e)
             {
                 //    ApiException.ErrorContent contains a JSON serialized ErrorResponse
                 LusidProblemDetails errorResponse = e.ProblemDetails();
-                Assert.That(errorResponse.Name, Is.EqualTo("PortfolioNotFound"));
+                Assert.That(errorResponse.Name, Is.EqualTo("SubscriptionNotFound"));
             }
         }
 
@@ -113,7 +99,7 @@ namespace Finbourne.Notifications.Sdk.Extensions.Tutorials.ExtensionIntegrationT
         {
             try
             {
-                var _ = _factory.Api<NotificationsApi>().CreateEmailNotification("@£$@£%", "@@@@@@", _emailNotification);
+                _factory.Api<NotificationsApi>().CreateEmailNotification("@£$@£%", "#####", _emailNotification);
             }
             catch (ApiException e)
             {
@@ -174,7 +160,6 @@ namespace Finbourne.Notifications.Sdk.Extensions.Tutorials.ExtensionIntegrationT
                     Assert.Fail("The request should have failed due to a validation error, and the validation details should be returned");
                 }
             }
-        }
+        }        
     }
 }
-*/
