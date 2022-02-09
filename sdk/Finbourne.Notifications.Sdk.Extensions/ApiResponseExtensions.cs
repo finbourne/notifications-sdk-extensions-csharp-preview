@@ -11,7 +11,7 @@ namespace Finbourne.Notifications.Sdk.Extensions
         /// <summary>
         /// The header that the request id is contained within.
         /// </summary>
-        public const string RequestIdHeader = "lusid-meta-requestId";
+        public const string RequestIdHeader = "notifications-meta-requestId";
         
         /// <summary>
         /// The header that the Date Time Offset is contained within.
