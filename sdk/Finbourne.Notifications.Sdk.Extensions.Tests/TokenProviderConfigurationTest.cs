@@ -5,8 +5,6 @@ namespace Finbourne.Notifications.Sdk.Extensions.Tests
     [TestFixture]
     public class TokenProviderConfigurationTest
     {
-        private const string APP = "notifications";
-
         [Test]
         public void Construct_WithNullTokenProvider_Returns_NonNull()
         {
@@ -18,7 +16,7 @@ namespace Finbourne.Notifications.Sdk.Extensions.Tests
         public void Construct_WithNullTokenProvider_Returns_BasePathSet()
         {
             var config = new TokenProviderConfiguration(null);
-            StringAssert.AreEqualIgnoringCase($"https://www.lusid.com/{APP}", config.BasePath);
+            StringAssert.StartsWith($"https://www.lusid.com/", config.BasePath);
         }
     }
 }
