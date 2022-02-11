@@ -78,7 +78,6 @@ namespace Finbourne.Notifications.Sdk.Extensions.Tests
                 {"clientSecret", "<clientSecret>"},
                 {"apiUrl", "<apiUrl>"},
             });
-            using var console = new InMemoryConsole();
             var apiConfiguration = ApiConfigurationBuilder.Build(_secretsFile);
             Assert.That(apiConfiguration.TokenUrl, Is.EqualTo("<tokenUrl>"));
             Assert.That(apiConfiguration.Username, Is.EqualTo("<username>"));
@@ -86,7 +85,6 @@ namespace Finbourne.Notifications.Sdk.Extensions.Tests
             Assert.That(apiConfiguration.ClientId, Is.EqualTo("<clientId>"));
             Assert.That(apiConfiguration.ClientSecret, Is.EqualTo("<clientSecret>"));
             Assert.That(apiConfiguration.ApiUrl, Is.EqualTo("<apiUrl>"));
-            StringAssert.Contains($"Loaded values from {_secretsFile}", console.GetOutput());
         }
         [Test]
         public void Throw_Exception_If_Secrets_File_Incomplete()
@@ -115,15 +113,13 @@ namespace Finbourne.Notifications.Sdk.Extensions.Tests
             Environment.SetEnvironmentVariable("FBN_USERNAME", "<env.username>");
             Environment.SetEnvironmentVariable("FBN_PASSWORD", "<env.password>");
             Environment.SetEnvironmentVariable("FBN_APP_NAME", "<env.app_name>");
-            using var console = new InMemoryConsole();
             var apiConfiguration = ApiConfigurationBuilder.Build(null);
             Assert.That(apiConfiguration.TokenUrl, Is.EqualTo("<env.tokenUrl>"));
             Assert.That(apiConfiguration.Username, Is.EqualTo("<env.username>"));
             Assert.That(apiConfiguration.Password, Is.EqualTo("<env.password>"));
             Assert.That(apiConfiguration.ClientId, Is.EqualTo("<env.clientId>"));
             Assert.That(apiConfiguration.ClientSecret, Is.EqualTo("<env.clientSecret>"));
-            Assert.That(apiConfiguration.ApiUrl, Is.EqualTo("<env.apiUrl>"));
-            StringAssert.Contains("Loaded values from environment", console.GetOutput());
+            Assert.That(apiConfiguration.ApiUrl, Is.EqualTo("<env.apiUrl>"));            
         }
         [Test]
         public void Throw_Exception_If_Environment_Variables_Incomplete()
@@ -153,7 +149,6 @@ namespace Finbourne.Notifications.Sdk.Extensions.Tests
                 { "api:Password", "<password>" },
                 { "api:ApplicationName", "<app_name>" }
             };
-            using var console = new InMemoryConsole();
             var config = new ConfigurationBuilder()
                 .AddInMemoryCollection(settings)
                 .Build();
@@ -165,7 +160,6 @@ namespace Finbourne.Notifications.Sdk.Extensions.Tests
             Assert.That(apiConfiguration.ClientId, Is.EqualTo("<clientId>"));
             Assert.That(apiConfiguration.ClientSecret, Is.EqualTo("<clientSecret>"));
             Assert.That(apiConfiguration.ApiUrl, Is.EqualTo("<apiUrl>"));
-            StringAssert.Contains($"Loaded values from configuration", console.GetOutput());
         }
         [Test]
         public void Throw_Exception_If_Configuration_Section_Is_Null()

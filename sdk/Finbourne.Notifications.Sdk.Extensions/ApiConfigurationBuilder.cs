@@ -69,7 +69,7 @@ namespace Finbourne.Notifications.Sdk.Extensions
         }        
 
         private static ApiConfiguration BuildFromEnvironmentVariables()
-        {            
+        {
             var apiConfig = new ApiConfiguration
             {
                 TokenUrl = Environment.GetEnvironmentVariable("FBN_TOKEN_URL") ?? Environment.GetEnvironmentVariable("fbn_token_url"),

@@ -1,8 +1,7 @@
 ﻿using Finbourne.Notifications.Sdk.Api;
-using Finbourne.Notifications.Sdk.Extensions.Tutorials.ExtensionIntegrationTests;
 using NUnit.Framework;
 
-namespace Finbourne.Notifications.Sdk.Extensions.Tutorials.ExtensionsIntegrationTests
+namespace Finbourne.Notifications.Sdk.Extensions.Tutorials
 {
     [TestFixture]
     public class ApiResponseExtensionsTest

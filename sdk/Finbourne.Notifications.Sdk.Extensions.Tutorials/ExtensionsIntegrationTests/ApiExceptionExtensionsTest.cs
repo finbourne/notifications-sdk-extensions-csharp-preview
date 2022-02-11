@@ -7,14 +7,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 
-namespace Finbourne.Notifications.Sdk.Extensions.Tutorials.ExtensionIntegrationTests
+namespace Finbourne.Notifications.Sdk.Extensions.Tutorials
 {
     [TestFixture]
     public class ApiExceptionExtensionsTest
     {
         private IApiFactory _factory;
         private CreateEmailNotification _emailNotification;
-        private const string RequestIdRegexPattern = "[a-zA-Z0-9]{13}:[0-9a-fA-F]{8}";
 
         [OneTimeSetUp]
         public void SetUp()
