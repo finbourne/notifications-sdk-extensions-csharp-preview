@@ -454,4 +454,8 @@ $RECYCLE.BIN/
 !.vscode/extensions.json
 
 # LUSID configuration
-secrets.json
+# secrets
+**/secrets*
+
+# Environments
+**/.env
