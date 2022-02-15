@@ -19,4 +19,4 @@ $ dotnet add package Finbourne.Notifications.Sdk.Extensions
 
 | branch | status |
 | --- | --- |
-| `master` |  ![Nuget](https://img.shields.io/nuget/v/Finbourne.Notifications.Sdk.Extensions?color=blue)|
+| `master` | ![Nuget](https://img.shields.io/nuget/v/Finbourne.Notifications.Sdk.Extensions?color=blue) [![Build and test](https://github.com/finbourne/finbourne-notifications-sdk-extensions-csharp/actions/workflows/build-and-test.yaml/badge.svg)](https://github.com/finbourne/finbourne-notifications-sdk-extensions-csharp/actions/workflows/build-and-test.yaml) |
