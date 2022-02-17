@@ -6,11 +6,15 @@
     <Authors>engineering@finbourne.com</Authors>
     <Company>FINBOURNE Technology Limited</Company>
 	  <Product>LUSID</Product>
-	  <Description>LUSID Notifications service SDK Extensions</Description>
+	  <Description>FINBOURNE Notifications service SDK Extensions</Description>
 	  <RepositoryUrl>https://github.com/finbourne/finbourne-notifications-sdk-extensions-csharp</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <DocumentationFile></DocumentationFile>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="../../LICENSE.md" Pack="true" PackagePath="LICENSE.md"/>
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Finbourne.Notifications.Sdk" Version="0.1.219" />
     <PackageReference Include="JsonSubTypes" Version="1.8.0" />
