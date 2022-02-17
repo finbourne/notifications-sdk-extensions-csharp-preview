@@ -8,7 +8,7 @@
     <Company>FINBOURNE Technology Limited</Company>
 	  <Product>LUSID</Product>
 	  <Description>FINBOURNE Notifications service SDK Extensions - Tuttorials project</Description>
-	  <RepositoryUrl>https://github.com/finbourne/finbourne-notifications-sdk-extensions-csharp</RepositoryUrl>
+	  <RepositoryUrl>https://github.com/finbourne/notifications-sdk-extensions-csharp-preview</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
   <ItemGroup>
