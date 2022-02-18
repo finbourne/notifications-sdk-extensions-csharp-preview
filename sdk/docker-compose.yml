@@ -2,10 +2,10 @@ version: "3"
 
 services:
 
-  lusid-sdk-csharp-test:
+  notifications-sdk-extensions-csharp-preview-test:
     build: .
-    container_name: finbourne-notifications-sdk-extensions-csharp-test
-    image: finbourne/finbourne-notifications-sdk-extensions-csharp-test
+    container_name: notifications-sdk-extensions-csharp-preview-test
+    image: finbourne/notifications-sdk-extensions-csharp-preview-test
     environment:
       - FBN_TOKEN_URL
       - FBN_USERNAME

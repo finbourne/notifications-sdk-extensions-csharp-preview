@@ -453,7 +453,9 @@ $RECYCLE.BIN/
 !.vscode/launch.json
 !.vscode/extensions.json
 
-# LUSID configuration
+##
+## FINBOURNE
+##
 # secrets
 **/secrets*
 

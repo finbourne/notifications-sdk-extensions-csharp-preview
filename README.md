@@ -1,7 +1,7 @@
 # LUSID<sup>®</sup> Notifications SDK Extensions C# (Preview)
 ![LUSID by Finbourne](https://content.finbourne.com/LUSID_repo.png)
 
-These are the C# SDK Extensions (Preview) to accompany the [C# SDK (Preview) for the Notification application](https://github.com/finbourne/finbourne-notifications-sdk-csharp). The Notification application provides notifications via email, SMS or webhook when LUSID events occur.
+These are the C# SDK Extensions (Preview) to accompany the [C# SDK (Preview) for the Notification application](https://github.com/finbourne/notifications-sdk-csharp-preview). The Notification application provides notifications via email, SMS or webhook when LUSID events occur.
 
 This extensions package provides the user with additional extensions to make it easy to configure and use the API endpoints. This repository contains examples of how to use these additional extensions in the Finbourne.Notifications.Sdk.Extensions.Tutorials project.
 
@@ -11,7 +11,7 @@ For more details on other applications in the LUSID platform, see [Understanding
 
 ## Installation
 
-The NuGet package for the LUSID Notifications service SDK (Preview) can installed from https://www.nuget.org/packages/Finbourne.Notifications.Sdk.Extensions.Preview using the following:
+The NuGet package for the FINBOURNE Notifications service SDK (Preview) can installed from https://www.nuget.org/packages/Finbourne.Notifications.Sdk.Extensions.Preview using the following:
 
 ```
 $ dotnet add package Finbourne.Notifications.Sdk.Extensions.Preview
