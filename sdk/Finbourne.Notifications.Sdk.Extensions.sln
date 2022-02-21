@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Finbourne.Notifications.Sdk
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Finbourne.Notifications.Sdk.Extensions.Tests", "Finbourne.Notifications.Sdk.Extensions.Tests\Finbourne.Notifications.Sdk.Extensions.Tests.csproj", "{ED0F1A24-FD0E-4F6E-B6C2-B5741AF3E266}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Finbourne.Notifications.Sdk.Extensions.Tutorials", "Finbourne.Notifications.Sdk.Extensions.Tutorials\Finbourne.Notifications.Sdk.Extensions.Tutorials.csproj", "{3DD2AC12-3E3B-48FD-A0DA-A72C49E993A8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Finbourne.Notifications.Sdk.Extensions.IntegrationTests", "Finbourne.Notifications.Sdk.Extensions.IntegrationTests\Finbourne.Notifications.Sdk.Extensions.IntegrationTests.csproj", "{3DD2AC12-3E3B-48FD-A0DA-A72C49E993A8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

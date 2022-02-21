@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 
-namespace Finbourne.Notifications.Sdk.Extensions.Tutorials
+namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
 {
     [TestFixture]
     public class ApiExceptionExtensionsTest

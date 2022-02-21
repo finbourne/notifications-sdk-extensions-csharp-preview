@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 using Polly;
 
 [assembly: InternalsVisibleTo("Finbourne.Notifications.Sdk.Extensions.Tests")]
-[assembly: InternalsVisibleTo("Finbourne.Notifications.Sdk.Extensions.Tutorials")]
+[assembly: InternalsVisibleTo("Finbourne.Notifications.Sdk.Extensions.IntegrationTests")]
 
 namespace Finbourne.Notifications.Sdk.Extensions
 {

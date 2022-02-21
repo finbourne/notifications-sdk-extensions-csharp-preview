@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace Finbourne.Notifications.Sdk.Extensions.Tutorials
+namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
 {
     [TestFixture]
     public class TokenProviderConfigurationTest

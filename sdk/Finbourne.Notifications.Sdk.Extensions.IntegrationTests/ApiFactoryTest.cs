@@ -4,7 +4,7 @@ using Finbourne.Notifications.Sdk.Model;
 using NUnit.Framework;
 using System;
 
-namespace Finbourne.Notifications.Sdk.Extensions.Tutorials
+namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
 {
     public class ApiFactoryTest
     {
