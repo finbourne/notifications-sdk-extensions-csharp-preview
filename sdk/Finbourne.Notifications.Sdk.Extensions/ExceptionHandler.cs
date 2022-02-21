@@ -17,7 +17,7 @@ namespace Finbourne.Notifications.Sdk.Extensions
         public static Exception CustomExceptionFactory(string methodName, IApiResponse response)
         {
             // Use default exception handler first (only use subsequent checks if this returns null)
-            Exception defaultException = Configuration.DefaultExceptionFactory.Invoke(methodName, response);
+            Exception defaultException = Client.Configuration.DefaultExceptionFactory.Invoke(methodName, response);
             if (defaultException != null)
             {
                 return defaultException;
