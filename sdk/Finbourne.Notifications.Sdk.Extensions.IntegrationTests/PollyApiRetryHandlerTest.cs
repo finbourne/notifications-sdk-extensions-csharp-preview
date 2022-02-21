@@ -114,7 +114,7 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
 
             RetryConfiguration.RetryPolicy = PollyApiRetryHandler.DefaultRetryPolicyWithFallback;
 
-            // Calling GetPortfolio or any other API triggers the flow that triggers polly
+            // Calling GetNotification or any other API triggers the flow that triggers polly
             var exception = Assert.Throws<ApiException>(
                 () => _apiFactory.Api<INotificationsApi>().GetNotification("no_scope", "no_code", "no_id")
             );
@@ -137,7 +137,7 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
             }
             RetryConfiguration.RetryPolicy = PollyApiRetryHandler.DefaultRetryPolicy; // No fallback
 
-            // Calling GetPortfolio or any other API triggers the flow that triggers polly
+            // Calling GetNotification or any other API triggers the flow that triggers polly
             var response = _apiFactory.Api<INotificationsApi>().GetNotification("no_scope", "no_code", "no_id");
 
             Assert.That(_apiCallCount, Is.EqualTo(expectedNumberOfApiCalls));
@@ -158,7 +158,7 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
             AddMockHttpResponseToQueue(_httpListener, statusCode: 200, responseContent: _mockResponse.ToJson());
             RetryConfiguration.RetryPolicy = PollyApiRetryHandler.DefaultRetryPolicyWithFallback;
 
-            // Calling GetPortfolio or any other API triggers the flow that triggers polly
+            // Calling GetNotification or any other API triggers the flow that triggers polly
             var sdkResponse = _apiFactory.Api<INotificationsApi>().GetNotification("no_scope", "no_code", "no_id");
 
             Assert.That(sdkResponse, Is.EqualTo(_mockResponse));
@@ -189,7 +189,7 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
                         retryCount++;
                     });
 
-            // Calling GetPortfolio or any other API triggers the flow that triggers polly
+            // Calling GetNotification or any other API triggers the flow that triggers polly
             var sdkResponse = _apiFactory.Api<INotificationsApi>().GetNotification("no_scope", "no_code", "no_id");
 
             Assert.That(retryCount, Is.EqualTo(expectedNumberOfRetries));
@@ -260,7 +260,7 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
                 .Retry(retryCount: 3, onRetry: (result, i) => policy2TriggerCount++);
             RetryConfiguration.RetryPolicy = policy1.Wrap(policy2);
 
-            // Calling GetPortfolio or any other API triggers the flow that triggers polly
+            // Calling GetNotification or any other API triggers the flow that triggers polly
             var sdkResponse = _apiFactory.Api<INotificationsApi>().GetNotification("no_scope", "no_code", "no_id");
 
             Assert.That(policy1TriggerCount, Is.EqualTo(2));
@@ -285,7 +285,7 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
                 timeoutAfterMillis + 10);
             RetryConfiguration.RetryPolicy = PollyApiRetryHandler.DefaultRetryPolicyWithFallback;
 
-            // Calling GetPortfolio or any other API triggers the flow that triggers polly
+            // Calling GetNotification or any other API triggers the flow that triggers polly
 
             var exception = Assert.Throws<ApiException>(
                 () => _apiFactory.Api<INotificationsApi>().GetNotification("no_scope", "no_code", "no_id"));
@@ -334,7 +334,7 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
             AddMockHttpResponseToQueue(_httpListener, statusCode: 200, responseContent: _mockResponse.ToJson());
             RetryConfiguration.RetryPolicy = PollyApiRetryHandler.DefaultRetryPolicyWithFallback;
 
-            // Calling GetPortfolio or any other API triggers the flow that triggers polly
+            // Calling GetNotification or any other API triggers the flow that triggers polly
             var sdkResponse = await _apiFactory.Api<INotificationsApi>().GetNotificationAsync("no_scope", "no_code", "no_id");
 
             Assert.That(sdkResponse, Is.EqualTo(_mockResponse));
@@ -376,7 +376,7 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
             }
             RetryConfiguration.AsyncRetryPolicy = PollyApiRetryHandler.DefaultRetryPolicyAsync; // No fallback
 
-            // Calling GetPortfolio or any other API triggers the flow that triggers polly
+            // Calling GetNotificationAsync or any other API triggers the flow that triggers polly
             var response = await _apiFactory.Api<INotificationsApi>().GetNotificationAsync("no_scope", "no_code", "no_id");
 
             // Policies with no fallback return null
@@ -415,7 +415,7 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
             );
 
 
-            // Calling GetPortfolio or any other API triggers the flow that triggers polly
+            // Calling GetNotificationAsync or any other API triggers the flow that triggers polly
             var exception = Assert.ThrowsAsync<ApiException>(
                 () => _apiFactory.Api<INotificationsApi>().GetNotificationAsync("no_scope", "no_code", "no_id"));
 
