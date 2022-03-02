@@ -44,7 +44,7 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
             _httpListener.Prefixes.Add(ListenerUriPrefix);
 
             var testApiConfig = IntegrationTestApiFactoryBuilder.CreateApiConfiguration("secrets.json");
-            testApiConfig.ApiUrl = ListenerUriPrefix;
+            testApiConfig.NotificationsUrl = ListenerUriPrefix;
 
             _apiFactory = new ApiFactory(testApiConfig);
 

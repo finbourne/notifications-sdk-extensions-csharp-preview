@@ -91,7 +91,7 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
             var config = IntegrationTestApiFactoryBuilder.CreateApiConfiguration("secrets.json");
             var provider = new ClientCredentialsFlowTokenProvider(config);
 
-            var factory = ApiFactoryBuilder.Build(config.ApiUrl, provider);
+            var factory = ApiFactoryBuilder.Build(config.NotificationsUrl, provider);
             var api = factory.Api<ApplicationMetadataApi>();
             ResourceListOfAccessControlledResource resources = api.ListAccessControlledResources();
             Assert.IsNotNull(resources);

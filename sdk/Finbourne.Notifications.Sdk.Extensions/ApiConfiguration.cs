@@ -33,9 +33,9 @@ namespace Finbourne.Notifications.Sdk.Extensions
         public string ClientSecret { get;  set; }
 
         /// <summary>
-        /// Api Url
+        /// Notifications Api Url
         /// </summary>
-        public string ApiUrl { get; set; }
+        public string NotificationsUrl { get; set; }
 
         /// <summary>
         /// Client Application name
@@ -53,7 +53,7 @@ namespace Finbourne.Notifications.Sdk.Extensions
                    string.IsNullOrEmpty(Password) ||
                    string.IsNullOrEmpty(ClientId) ||
                    string.IsNullOrEmpty(ClientSecret) ||
-                   string.IsNullOrEmpty(ApiUrl);
+                   string.IsNullOrEmpty(NotificationsUrl);
         }
 
         /// <summary>
@@ -83,9 +83,9 @@ namespace Finbourne.Notifications.Sdk.Extensions
             {
                 missingConfig.Add(nameof(ClientSecret));
             } 
-            if (string.IsNullOrEmpty(ApiUrl))
+            if (string.IsNullOrEmpty(NotificationsUrl))
             {
-                missingConfig.Add(nameof(ApiUrl));
+                missingConfig.Add(nameof(NotificationsUrl));
             }
             return missingConfig;            
         }

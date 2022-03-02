@@ -40,16 +40,16 @@ namespace Finbourne.Notifications.Sdk.Extensions
                 throw new UriFormatException($"Invalid Token Uri: {apiConfiguration.TokenUrl}");
             }
 
-            if (!Uri.TryCreate(apiConfiguration.ApiUrl, UriKind.Absolute, out var _))
+            if (!Uri.TryCreate(apiConfiguration.NotificationsUrl, UriKind.Absolute, out var _))
             {
-                throw new UriFormatException($"Invalid Uri: {apiConfiguration.ApiUrl}");
+                throw new UriFormatException($"Invalid Uri: {apiConfiguration.NotificationsUrl}");
             }
 
             // Create configuration
             var tokenProvider = new ClientCredentialsFlowTokenProvider(apiConfiguration);
             var configuration = new TokenProviderConfiguration(tokenProvider)
             {
-                BasePath = apiConfiguration.ApiUrl,
+                BasePath = apiConfiguration.NotificationsUrl,
             };
             
             configuration.DefaultHeaders.Add("X-LUSID-Application", apiConfiguration.ApplicationName);
