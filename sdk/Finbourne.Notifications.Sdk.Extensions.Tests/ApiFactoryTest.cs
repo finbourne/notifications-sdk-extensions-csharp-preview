@@ -20,7 +20,7 @@ namespace Finbourne.Notifications.Sdk.Extensions.Tests
         }
 
         [Test]
-        public void InvalidApiUrl_ThrowsException()
+        public void InvalidNotificationsUrl_ThrowsException()
         {
             ApiConfiguration apiConfig = new ApiConfiguration
             {

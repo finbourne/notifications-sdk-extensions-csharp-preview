@@ -97,7 +97,7 @@ namespace Finbourne.Notifications.Sdk.Extensions.Tests
         }
 
         [Test]
-        public void ApiConfiguration_HasMissingConfig_Missing_ApiUrl_Returns_True()
+        public void ApiConfiguration_HasMissingConfig_Missing_NotificationsUrl_Returns_True()
         {
             ApiConfiguration config = GetApiConfiguration();
             config.NotificationsUrl = String.Empty;
@@ -105,7 +105,7 @@ namespace Finbourne.Notifications.Sdk.Extensions.Tests
         }
 
         [Test]
-        public void ApiConfiguration_MissingConfig_Missing_ApiUrl_Returns_Correct_String()
+        public void ApiConfiguration_MissingConfig_Missing_NotificationsUrl_Returns_Correct_String()
         {
             ApiConfiguration config = GetApiConfiguration();
             config.NotificationsUrl = String.Empty;
