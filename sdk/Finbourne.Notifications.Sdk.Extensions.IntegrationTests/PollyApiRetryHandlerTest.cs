@@ -25,12 +25,12 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
         private const string ListenerUriPrefix = "http://localhost:4446/";
         private int _apiCallCount;
 
-        private readonly Notification _mockResponse = new Notification("id", 
-            "description", 
-            "deliveryChannel", 
-            new Dictionary<string, object>() { {"receipient",null  } },
-            new Dictionary<string, object>() { { "content", null } }, 
-            new NotificationStatus("result",DateTimeOffset.UtcNow),
+        private readonly Notification _mockResponse = new Notification("id",
+            "description",
+            "deliveryChannel",
+            new Dictionary<string, object>() { { "receipient", null } },
+            new Dictionary<string, object>() { { "content", null } },
+            new NotificationStatus("result", DateTimeOffset.UtcNow),
             DateTimeOffset.UtcNow,
             "createdBy",
             DateTimeOffset.UtcNow,
@@ -53,6 +53,7 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
         }
 
         #region Sync tests
+
         [Test]
         public void CallApiMethod_WhenHttpStatusIs400AndRetryConditionIsNotSatisfied_ThrowsApiExceptionWithoutRetry()
         {
@@ -70,7 +71,7 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
 
             var exception = Assert.Throws<ApiException>(
                 () => _apiFactory.Api<INotificationsApi>().GetNotification("no_scope", "no_code", "no_id")
-            ); 
+            );
 
             Assert.That(exception.ErrorContent, Is.EqualTo(someError));
             Assert.That(exception.ErrorCode, Is.EqualTo(expectedStatusCode));
@@ -102,7 +103,8 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
 
         [Test]
         [TestCase(409)] // Concurrency
-        public void CallApiMethod_WhenApiResponseStatusCodeSatisfiesRetryCriteria_ExceedsPollyRetriesAndThrows(int returnedStatusCode)
+        public void CallApiMethod_WhenApiResponseStatusCodeSatisfiesRetryCriteria_ExceedsPollyRetriesAndThrows(
+            int returnedStatusCode)
         {
             const int expectedNumberOfRetries = PollyApiRetryHandler.DefaultNumberOfRetries;
             const int expectedNumberOfApiCalls = expectedNumberOfRetries + 1;
@@ -127,15 +129,18 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
 
         [Test]
         [TestCase(409)] // Concurrency conflict failure
-        public void CallApiMethod_WhenExceedsPollyRetries_NoFallbackPolicyDefined_DoesNotThrow_ReturnsEmptyResponse(int returnedStatusCode)
+        public void CallApiMethod_WhenExceedsPollyRetries_NoFallbackPolicyDefined_DoesNotThrow_ReturnsEmptyResponse(
+            int returnedStatusCode)
         {
             const int expectedNumberOfRetries = PollyApiRetryHandler.DefaultNumberOfRetries;
             const int expectedNumberOfApiCalls = expectedNumberOfRetries + 1;
             for (var i = 0; i < expectedNumberOfApiCalls; i++)
             {
                 // Every response fails
-                AddMockHttpResponseToQueue(_httpListener, statusCode: returnedStatusCode, responseContent: "Error that was thrown");
+                AddMockHttpResponseToQueue(_httpListener, statusCode: returnedStatusCode,
+                    responseContent: "Error that was thrown");
             }
+
             RetryConfiguration.RetryPolicy = PollyApiRetryHandler.DefaultRetryPolicy; // No fallback
 
             // Calling GetNotification or any other API triggers the flow that triggers polly
@@ -147,7 +152,8 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
 
         [Test]
         [TestCase(409)] // Concurrency conflict failure
-        public void CallApiMethod_PollyRetryConditionIsSatisfied_RetriesUntilSuccess_DoesNotThrow(int returnedStatusCode)
+        public void CallApiMethod_PollyRetryConditionIsSatisfied_RetriesUntilSuccess_DoesNotThrow(
+            int returnedStatusCode)
         {
             const int expectedNumberOfRetries = PollyApiRetryHandler.DefaultNumberOfRetries;
             const int expectedNumberOfApiCalls = 1 + expectedNumberOfRetries;
@@ -177,6 +183,7 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
             {
                 AddMockHttpResponseToQueue(_httpListener, returnedStatusCode, responseContent: _mockResponse.ToJson());
             }
+
             var retryCount = 0;
             // Polly retry policy with a backoff example
             RetryConfiguration.RetryPolicy = Policy
@@ -230,14 +237,16 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
                 Policy
                     .HandleResult<IRestResponse>(response => response.StatusCode == 0)
                     .Retry(retryCount: 2, onRetry: (response, count, ctx) => { })
-                );
+            );
 
             var exception = Assert.Throws<ApiException>(
                 () => _apiFactory.Api<INotificationsApi>().GetNotification("no_scope", "no_code", "no_id"));
 
             Assert.That(_apiCallCount, Is.EqualTo(expectedNumberOfApiCalls));
             Assert.That(exception.ErrorCode, Is.EqualTo(0));
-            Assert.That(exception.Message, Contains.Substring("Internal SDK error occurred when calling GetNotification: An error occurred while sending the request"));
+            Assert.That(exception.Message,
+                Contains.Substring(
+                    "Internal SDK error occurred when calling GetNotification: An error occurred while sending the request"));
         }
 
         [Test]
@@ -257,10 +266,12 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
             var policy1TriggerCount = 0;
             var policy2TriggerCount = 0;
             var policy1 = Policy
-                .HandleResult<IRestResponse>(apiResponse => apiResponse.StatusCode == (HttpStatusCode)statusCodeResponse1)
+                .HandleResult<IRestResponse>(apiResponse =>
+                    apiResponse.StatusCode == (HttpStatusCode)statusCodeResponse1)
                 .Retry(retryCount: 3, onRetry: (result, i) => policy1TriggerCount++);
             var policy2 = Policy
-                .HandleResult<IRestResponse>(apiResponse => apiResponse.StatusCode == (HttpStatusCode)statusCodeResponse2)
+                .HandleResult<IRestResponse>(apiResponse =>
+                    apiResponse.StatusCode == (HttpStatusCode)statusCodeResponse2)
                 .Retry(retryCount: 3, onRetry: (result, i) => policy2TriggerCount++);
             RetryConfiguration.RetryPolicy = policy1.Wrap(policy2);
 
@@ -275,7 +286,8 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
 
         // Default timeout config is 100000 seconds (1min40s)
         [Test]
-        [Explicit("Only run this locally. Given the timeout and the retries running this in the pipeline across all SDKs takes too long")]
+        [Explicit(
+            "Only run this locally. Given the timeout and the retries running this in the pipeline across all SDKs takes too long")]
         public void CallApiMethod_WhenRequestTimeExceedsTimeoutConfigured_NoRetryIsTriggeredOnClientTimeout_Throws()
         {
             var timeoutAfterMillis = GlobalConfiguration.Instance.Timeout;
@@ -298,37 +310,38 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
             // Notice that Sync throws different error message than async
             Assert.That(exception.ErrorContent, Contains.Substring("The operation has timed out"));
             Assert.That(exception.ErrorCode, Is.EqualTo(0));
-
         }
-        
-[Test]
+
+        [Test]
         public void UsePolicyWrap_WhenCallingApiMethodHitsRateLimit_BothDefaultAndRateLimitPoliciesAreUsed()
         {
             const int retryAfterResponseCode = 429;
             const int statusCodeResponseDefaultRetry = 409;
-            const int expectedNumberOfApiCalls = 6; // 3 failures for rate limit and 2 for the default one followed by success.
-            
+            const int
+                expectedNumberOfApiCalls =
+                    6; // 3 failures for rate limit and 2 for the default one followed by success.
+
             // First Response
-            AddMockHttpResponseToQueue(_httpListener, statusCode: retryAfterResponseCode, responseContent: "", 
-                0, new Dictionary<HttpResponseHeader, string>() {[HttpResponseHeader.RetryAfter] = "1"});
+            AddMockHttpResponseToQueue(_httpListener, statusCode: retryAfterResponseCode, responseContent: "",
+                0, new Dictionary<HttpResponseHeader, string>() { [HttpResponseHeader.RetryAfter] = "1" });
             // Second Response - same, triggers another retry
-            AddMockHttpResponseToQueue(_httpListener, statusCode: retryAfterResponseCode, responseContent: "", 
-                0, new Dictionary<HttpResponseHeader, string>() {[HttpResponseHeader.RetryAfter] = "1"});
-            
-            AddMockHttpResponseToQueue(_httpListener, statusCode: retryAfterResponseCode, responseContent: "", 
-                0, new Dictionary<HttpResponseHeader, string>() {[HttpResponseHeader.RetryAfter] = "1"});
+            AddMockHttpResponseToQueue(_httpListener, statusCode: retryAfterResponseCode, responseContent: "",
+                0, new Dictionary<HttpResponseHeader, string>() { [HttpResponseHeader.RetryAfter] = "1" });
+
+            AddMockHttpResponseToQueue(_httpListener, statusCode: retryAfterResponseCode, responseContent: "",
+                0, new Dictionary<HttpResponseHeader, string>() { [HttpResponseHeader.RetryAfter] = "1" });
 
             AddMockHttpResponseToQueue(_httpListener, statusCode: statusCodeResponseDefaultRetry, responseContent: "");
-            
+
             AddMockHttpResponseToQueue(_httpListener, statusCode: statusCodeResponseDefaultRetry, responseContent: "");
 
             AddMockHttpResponseToQueue(_httpListener, statusCode: 200, responseContent: _mockResponse.ToJson());
-          
+
             RetryConfiguration.RetryPolicy = PollyApiRetryHandler.DefaultRetryPolicyWithRateLimit;
-            
+
             // Calling the API triggers the flow that triggers polly
             var sdkResponse = _apiFactory.Api<INotificationsApi>().GetNotification("code", "scope", "id");
-            
+
             Assert.That(sdkResponse, Is.EqualTo(_mockResponse));
             Assert.That(_apiCallCount, Is.EqualTo(expectedNumberOfApiCalls));
         }
@@ -338,15 +351,15 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
         {
             const int retryAfterResponseCode = 429;
             const int expectedNumberOfApiCalls = 4; // 1 initial call, 2 failed retries and one success
-            
+
             // First Response
-            AddMockHttpResponseToQueue(_httpListener, statusCode: retryAfterResponseCode, responseContent: "", 
+            AddMockHttpResponseToQueue(_httpListener, statusCode: retryAfterResponseCode, responseContent: "",
                 0, new Dictionary<HttpResponseHeader, string>() { [HttpResponseHeader.RetryAfter] = "5" });
             // Second Response - same, triggers another retry
-            AddMockHttpResponseToQueue(_httpListener, statusCode: retryAfterResponseCode, responseContent: "", 
+            AddMockHttpResponseToQueue(_httpListener, statusCode: retryAfterResponseCode, responseContent: "",
                 0, new Dictionary<HttpResponseHeader, string>() { [HttpResponseHeader.RetryAfter] = "7" });
-            
-            AddMockHttpResponseToQueue(_httpListener, statusCode: retryAfterResponseCode, responseContent: "", 
+
+            AddMockHttpResponseToQueue(_httpListener, statusCode: retryAfterResponseCode, responseContent: "",
                 0, new Dictionary<HttpResponseHeader, string>() { [HttpResponseHeader.RetryAfter] = "9" });
             // 4 time lucky:
             AddMockHttpResponseToQueue(_httpListener, statusCode: 200, responseContent: _mockResponse.ToJson());
@@ -356,17 +369,17 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
             // Calling the API triggers the flow that triggers polly
             var sdkResponse = _apiFactory.Api<INotificationsApi>().GetNotification("code", "scope", "id");
             sw.Stop();
-            Assert.That(sw.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(1000*21)); // retry after was respected
+            Assert.That(sw.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(1000 * 21)); // retry after was respected
             Assert.That(sdkResponse, Is.EqualTo(_mockResponse));
             Assert.That(_apiCallCount, Is.EqualTo(expectedNumberOfApiCalls));
         }
-        
+
         [Test]
         public void UseRateLimitPolicyNoRetryAfter_WhenCallingApiMethodHitsRateLimit_RetryUsesExponentialBackoff()
         {
             const int retryAfterResponseCode = 429;
             const int expectedNumberOfApiCalls = 4; // 1 initial call + 3 retries 
-            
+
             // First Response
             AddMockHttpResponseToQueue(_httpListener, statusCode: retryAfterResponseCode, "");
             // Second Response - same, triggers another retry
@@ -376,20 +389,23 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
 
             AddMockHttpResponseToQueue(_httpListener, statusCode: retryAfterResponseCode, responseContent: "");
 
-            
+
             RetryConfiguration.RetryPolicy = PollyApiRetryHandler.RateLimitRetryPolicy;
             var sw = Stopwatch.StartNew();
             // Calling the API triggers the flow that triggers polly
             _apiFactory.Api<INotificationsApi>().GetNotification("code", "scope", "id");
             sw.Stop();
-            Assert.That(sw.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(1000*(2+4+8))); // exponential backoff
+            Assert.That(sw.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(1000 * (2 + 4 + 8))); // exponential backoff
             Assert.That(_apiCallCount, Is.EqualTo(expectedNumberOfApiCalls));
         }
+
         #endregion
 
         #region Async tests
+
         [Test]
-        public async Task CallApiMethodAsync_WhenHttpStatusIs200AndRetryConditionIsNotSatisfied_NoPollyRetryIsTriggered()
+        public async Task
+            CallApiMethodAsync_WhenHttpStatusIs200AndRetryConditionIsNotSatisfied_NoPollyRetryIsTriggered()
         {
             // It should do nothing when response code is 200
             const int expectedStatusCode = 200;
@@ -402,7 +418,8 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
 
             RetryConfiguration.AsyncRetryPolicy = PollyApiRetryHandler.DefaultRetryPolicyWithFallbackAsync;
 
-            var sdkResponse = await _apiFactory.Api<INotificationsApi>().GetNotificationAsync("no_scope", "no_code", "no_id");
+            var sdkResponse = await _apiFactory.Api<INotificationsApi>()
+                .GetNotificationAsync("no_scope", "no_code", "no_id");
 
             // Api call should be just called once
             Assert.That(_apiCallCount, Is.EqualTo(expectedNumberOfApiCalls));
@@ -411,7 +428,8 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
 
         [Test]
         [TestCase(409)] // Concurrency conflict failure
-        public async Task CallApiMethodAsync_PollyRetryConditionIsSatisfied_RetriesUntilSuccess_DoesNotThrow(int returnedStatusCode)
+        public async Task CallApiMethodAsync_PollyRetryConditionIsSatisfied_RetriesUntilSuccess_DoesNotThrow(
+            int returnedStatusCode)
         {
             const int expectedNumberOfRetries = 2;
             const int expectedNumberOfApiCalls = 1 + expectedNumberOfRetries;
@@ -424,7 +442,8 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
             RetryConfiguration.RetryPolicy = PollyApiRetryHandler.DefaultRetryPolicyWithFallback;
 
             // Calling GetNotification or any other API triggers the flow that triggers polly
-            var sdkResponse = await _apiFactory.Api<INotificationsApi>().GetNotificationAsync("no_scope", "no_code", "no_id");
+            var sdkResponse = await _apiFactory.Api<INotificationsApi>()
+                .GetNotificationAsync("no_scope", "no_code", "no_id");
 
             Assert.That(sdkResponse, Is.EqualTo(_mockResponse));
             Assert.That(_apiCallCount, Is.EqualTo(expectedNumberOfApiCalls));
@@ -432,7 +451,8 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
 
         [Test]
         [TestCase(409)] // Concurrency conflict failure
-        public void CallApiMethodAsync_AsyncPollyIsTriggered_ThrowsWithExceededCallsFallbackPolicy(int returnedStatusCode)
+        public void CallApiMethodAsync_AsyncPollyIsTriggered_ThrowsWithExceededCallsFallbackPolicy(
+            int returnedStatusCode)
         {
             const int expectedNumberOfRetries = 2;
             const int expectedNumberOfApiCalls = expectedNumberOfRetries + 1;
@@ -441,11 +461,12 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
             {
                 AddMockHttpResponseToQueue(_httpListener, returnedStatusCode, expectedErrorResponse);
             }
+
             RetryConfiguration.AsyncRetryPolicy = PollyApiRetryHandler.DefaultRetryPolicyWithFallbackAsync;
 
             // Calling API triggers the flow that triggers polly
             var exception = Assert.ThrowsAsync<ApiException>(
-                 () => _apiFactory.Api<INotificationsApi>().GetNotificationAsync("no_scope", "no_code", "no_id"));
+                () => _apiFactory.Api<INotificationsApi>().GetNotificationAsync("no_scope", "no_code", "no_id"));
 
             Assert.That(exception.Message, Is.EqualTo($"Error calling GetNotification: {expectedErrorResponse}"));
             Assert.That(exception.ErrorCode, Is.EqualTo(returnedStatusCode));
@@ -454,7 +475,9 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
 
         [Test]
         [TestCase(409)] // Concurrency conflict failure
-        public async Task CallApiMethodAsync_AsyncPollyIsTriggered_NoFallbackPolicy_ReturnsNullResponseOnRetriesExceeded(int returnedStatusCode)
+        public async Task
+            CallApiMethodAsync_AsyncPollyIsTriggered_NoFallbackPolicy_ReturnsNullResponseOnRetriesExceeded(
+                int returnedStatusCode)
         {
             const int expectedNumberOfRetries = 2;
             const int expectedNumberOfApiCalls = expectedNumberOfRetries + 1;
@@ -463,10 +486,12 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
             {
                 AddMockHttpResponseToQueue(_httpListener, returnedStatusCode, expectedErrorResponse);
             }
+
             RetryConfiguration.AsyncRetryPolicy = PollyApiRetryHandler.DefaultRetryPolicyAsync; // No fallback
 
             // Calling GetNotificationAsync or any other API triggers the flow that triggers polly
-            var response = await _apiFactory.Api<INotificationsApi>().GetNotificationAsync("no_scope", "no_code", "no_id");
+            var response = await _apiFactory.Api<INotificationsApi>()
+                .GetNotificationAsync("no_scope", "no_code", "no_id");
 
             // Policies with no fallback return null
             Assert.That(response, Is.Null);
@@ -476,7 +501,8 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
         [Test]
         [Explicit("This test only works on Windows as when running on a Linux Docker image. " +
                   "Linux seems to handle aborted connections differently, resulting always in a 200 status rather than 0.")]
-        public void CallApiMethodAsync_WhenApiResponseStatusCodeSatisfiesRetryCriteria_ConnectivityIssuesNoRetry_Throws()
+        public void
+            CallApiMethodAsync_WhenApiResponseStatusCodeSatisfiesRetryCriteria_ConnectivityIssuesNoRetry_Throws()
         {
             const int expectedNumberOfApiCalls = 3;
             for (var i = 0; i < expectedNumberOfApiCalls; i++)
@@ -521,8 +547,10 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
 
         // Default timeout config is 100000 seconds (1min40s)
         [Test]
-        [Explicit("Only run this locally. Given the timeout and the retries running this in the pipeline across all SDKs takes too long")]
-        public void CallApiMethodAsync_WhenRequestTimeExceedsTimeoutConfigured_NoRetryIsTriggeredOnClientTimeout_Throws()
+        [Explicit(
+            "Only run this locally. Given the timeout and the retries running this in the pipeline across all SDKs takes too long")]
+        public void
+            CallApiMethodAsync_WhenRequestTimeExceedsTimeoutConfigured_NoRetryIsTriggeredOnClientTimeout_Throws()
         {
             var timeoutAfterMillis = GlobalConfiguration.Instance.Timeout;
             const int returnedStatusCode = 200; // Doesn't matter what code is on timeout, will always return 0
@@ -539,35 +567,37 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
             Assert.That(exception.ErrorContent, Contains.Substring("The request timed-out"));
             Assert.That(exception.ErrorCode, Is.EqualTo(0));
         }
-        
-  [Test]
+
+        [Test]
         public async Task UsePolicyWrapAsync_WhenCallingApiMethodHitsRateLimit_BothDefaultAndRateLimitPoliciesAreUsed()
         {
             const int retryAfterResponseCode = 429;
             const int statusCodeResponseDefaultRetry = 409;
-            const int expectedNumberOfApiCalls = 6; // 3 failures for rate limit and 2 for the default one followed by success.
-            
+            const int
+                expectedNumberOfApiCalls =
+                    6; // 3 failures for rate limit and 2 for the default one followed by success.
+
             // First Response
-            AddMockHttpResponseToQueue(_httpListener, statusCode: retryAfterResponseCode, responseContent: "", 
+            AddMockHttpResponseToQueue(_httpListener, statusCode: retryAfterResponseCode, responseContent: "",
                 0, new Dictionary<HttpResponseHeader, string>() { [HttpResponseHeader.RetryAfter] = "1" });
             // Second Response - same, triggers another retry
-            AddMockHttpResponseToQueue(_httpListener, statusCode: retryAfterResponseCode, responseContent: "", 
+            AddMockHttpResponseToQueue(_httpListener, statusCode: retryAfterResponseCode, responseContent: "",
                 0, new Dictionary<HttpResponseHeader, string>() { [HttpResponseHeader.RetryAfter] = "1" });
-            
-            AddMockHttpResponseToQueue(_httpListener, statusCode: retryAfterResponseCode, responseContent: "", 
+
+            AddMockHttpResponseToQueue(_httpListener, statusCode: retryAfterResponseCode, responseContent: "",
                 0, new Dictionary<HttpResponseHeader, string>() { [HttpResponseHeader.RetryAfter] = "1" });
 
             AddMockHttpResponseToQueue(_httpListener, statusCode: statusCodeResponseDefaultRetry, responseContent: "");
-            
+
             AddMockHttpResponseToQueue(_httpListener, statusCodeResponseDefaultRetry, responseContent: "");
 
             AddMockHttpResponseToQueue(_httpListener, statusCode: 200, responseContent: _mockResponse.ToJson());
-          
+
             RetryConfiguration.AsyncRetryPolicy = PollyApiRetryHandler.AsyncDefaultRetryPolicyWithRateLimit;
-            
+
             // Calling API triggers the flow that triggers polly
             var sdkResponse = await _apiFactory.Api<INotificationsApi>().GetNotificationAsync("code", "scope", "id");
-            
+
             Assert.That(sdkResponse, Is.EqualTo(_mockResponse));
             Assert.That(_apiCallCount, Is.EqualTo(expectedNumberOfApiCalls));
         }
@@ -577,15 +607,15 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
         {
             const int retryAfterResponseCode = 429;
             const int expectedNumberOfApiCalls = 4; // 1 initial call, 2 failed retries and one success
-            
+
             // First Response
-            AddMockHttpResponseToQueue(_httpListener, statusCode: retryAfterResponseCode, responseContent: "", 
+            AddMockHttpResponseToQueue(_httpListener, statusCode: retryAfterResponseCode, responseContent: "",
                 0, new Dictionary<HttpResponseHeader, string>() { [HttpResponseHeader.RetryAfter] = "5" });
             // Second Response - same, triggers another retry
-            AddMockHttpResponseToQueue(_httpListener, statusCode: retryAfterResponseCode, responseContent: "", 
+            AddMockHttpResponseToQueue(_httpListener, statusCode: retryAfterResponseCode, responseContent: "",
                 0, new Dictionary<HttpResponseHeader, string>() { [HttpResponseHeader.RetryAfter] = "7" });
-            
-            AddMockHttpResponseToQueue(_httpListener, statusCode: retryAfterResponseCode, responseContent: "", 
+
+            AddMockHttpResponseToQueue(_httpListener, statusCode: retryAfterResponseCode, responseContent: "",
                 0, new Dictionary<HttpResponseHeader, string>() { [HttpResponseHeader.RetryAfter] = "9" });
             // 4 time lucky:
             AddMockHttpResponseToQueue(_httpListener, statusCode: 200, responseContent: _mockResponse.ToJson());
@@ -595,17 +625,18 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
             // Calling API triggers the flow that triggers polly
             var sdkResponse = await _apiFactory.Api<INotificationsApi>().GetNotificationAsync("code", "scope", "id");
             sw.Stop();
-            Assert.That(sw.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(1000*21)); // retry after was respected
+            Assert.That(sw.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(1000 * 21)); // retry after was respected
             Assert.That(sdkResponse, Is.EqualTo(_mockResponse));
             Assert.That(_apiCallCount, Is.EqualTo(expectedNumberOfApiCalls));
         }
-        
+
         [Test]
-        public async Task UseRateLimitPolicyNoRetryAfterAsync_WhenCallingApiMethodHitsRateLimit_RetryUsesExponentialBackoff()
+        public async Task
+            UseRateLimitPolicyNoRetryAfterAsync_WhenCallingApiMethodHitsRateLimit_RetryUsesExponentialBackoff()
         {
             const int retryAfterResponseCode = 429;
             const int expectedNumberOfApiCalls = 4; // 1 initial call + 3 retries 
-            
+
             // First Response
             AddMockHttpResponseToQueue(_httpListener, statusCode: retryAfterResponseCode, responseContent: "");
             // Second Response - same, triggers another retry
@@ -615,15 +646,16 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
 
             AddMockHttpResponseToQueue(_httpListener, statusCode: retryAfterResponseCode, responseContent: "");
 
-            
+
             RetryConfiguration.AsyncRetryPolicy = PollyApiRetryHandler.AsyncRateLimitRetryPolicy;
             var sw = Stopwatch.StartNew();
             // Calling API triggers the flow that triggers polly
             await _apiFactory.Api<INotificationsApi>().GetNotificationAsync("code", "scope", "id");
             sw.Stop();
-            Assert.That(sw.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(1000*(2+4+8))); // exponential backoff
+            Assert.That(sw.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(1000 * (2 + 4 + 8))); // exponential backoff
             Assert.That(_apiCallCount, Is.EqualTo(expectedNumberOfApiCalls));
         }
+
         #endregion
 
         [TearDown]
@@ -660,7 +692,7 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
                 {
                     foreach (var keyValuePair in headerValues)
                     {
-                        response.Headers.Add(keyValuePair.Key, keyValuePair.Value);        
+                        response.Headers.Add(keyValuePair.Key, keyValuePair.Value);
                     }
                 }
 
@@ -674,9 +706,10 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
                 output.Close();
             }
         }
-        
+
         private void AddMockHttpResponseToQueue(HttpListener httpListener, int statusCode,
-            string responseContent, int timeToRespondMillis = 0,  Dictionary<HttpResponseHeader, string> headerValues = null)
+            string responseContent, int timeToRespondMillis = 0,
+            Dictionary<HttpResponseHeader, string> headerValues = null)
         {
             httpListener.BeginGetContext(
                 result =>
@@ -686,6 +719,5 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
                 },
                 httpListener);
         }
-
     }
 }
