@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Finbourne.Notifications.Sdk.Api;
 using Finbourne.Notifications.Sdk.Extensions;
 using Finbourne.Notifications.Sdk.Model;
@@ -21,6 +22,7 @@ namespace Examples
         private readonly SubscriptionsApi _subscriptionsApi;
         private readonly NotificationsApi _notificationsApi;
         private readonly EventsApi _eventsApi;
+        private readonly List<string> _emailAddress;
         
         private readonly string SubscriptionScope= "SubscriptionScope";
         private readonly string SubscriptionCode= "TransactionsLoaded";
@@ -29,8 +31,15 @@ namespace Examples
 
         public NotificationsNotebookSandbox()
         {
-            var apiSecretsFilename = Environment.GetEnvironmentVariable("FBN_SECRETS_PATH");
+            // Please add your email address to the list in order to receive notifications
+            _emailAddress = new List<string>{};
+
+            if (!_emailAddress.Any())
+            {
+                throw new ArgumentException("Please add an email address to receive notifications");
+            }
             
+            var apiSecretsFilename = Environment.GetEnvironmentVariable("FBN_SECRETS_PATH");
             _lusidFactory = ApiFactoryBuilder.Build(apiSecretsFilename);
             
             // Setup the apis we'll use in this notebook:
@@ -108,12 +117,11 @@ namespace Examples
         private void CreateEmailNotifications()
         {
             // Create email notifications for the subscription
-            var emailAddress = new List<string> {"email"}; // TODO: Populate dynamically
             var createEmailNotification = new CreateEmailNotification(
                 description: "Email Event Notification",
                 subject: "Email Event Notification",
                 plainTextBody: "Event with message and details",
-                emailAddressTo: emailAddress
+                emailAddressTo: _emailAddress
             );
 
             try
