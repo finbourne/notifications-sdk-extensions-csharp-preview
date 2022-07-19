@@ -32,10 +32,10 @@ jobs:
             exit 1
           fi
 
-      - name: setup .NET
+      - name: Setup .NET
         uses: actions/setup-dotnet@v2
 
-      - name: restore dependencies
+      - name: Restore dependencies
         run: |          
           retries=14
           found=0
