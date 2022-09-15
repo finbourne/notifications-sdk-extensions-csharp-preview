@@ -9,7 +9,4 @@ COPY Finbourne.Notifications.Sdk.Extensions.Tests/Finbourne.Notifications.Sdk.Ex
 COPY Finbourne.Notifications.Sdk.Extensions.IntegrationTests/Finbourne.Notifications.Sdk.Extensions.IntegrationTests.csproj /usr/src/Finbourne.Notifications.Sdk.Extensions.IntegrationTests/
 RUN dotnet restore Finbourne.Notifications.Sdk.Extensions
 
-ENV FBN_NOTIFICATIONS_API_URL ${FBN_NOTIFICATIONS_API_URL}
-
-# ENTRYPOINT [ "/bin/bash" ]
-ENTRYPOINT dotnet test --configuration Release --verbosity normal Finbourne.Notifications.Sdk.Extensions
+ENTRYPOINT dotnet test --configuration Release --verbosity normal

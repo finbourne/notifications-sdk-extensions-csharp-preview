@@ -12,7 +12,9 @@ services:
       - FBN_PASSWORD
       - FBN_CLIENT_ID
       - FBN_CLIENT_SECRET
-      - FBN_NOTIFICATIONS_API_URL
       - FBN_APP_NAME
+      - FBN_NOTIFICATIONS_API_URL=${FBN_BASE_API_URL}/insights
+      - FBN_ACCESS_TOKEN
+
     volumes:
       - .:/usr/src
