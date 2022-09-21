@@ -89,9 +89,17 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
         public void ApplicationMetadataApi_ListAccessControlledResources()
         {
             var config = IntegrationTestApiFactoryBuilder.CreateApiConfiguration("secrets.json");
-            var provider = new ClientCredentialsFlowTokenProvider(config);
+            ITokenProvider tokenProvider;
+            if (config.MissingSecretVariables)
+            {
+                tokenProvider = new PersonalAccessTokenProvider(config.PersonalAccessToken);
+            }
+            else 
+            {
+                tokenProvider = new ClientCredentialsFlowTokenProvider(ApiConfigurationBuilder.Build("secrets.json")); 
+            }
 
-            var factory = ApiFactoryBuilder.Build(config.NotificationsUrl, provider);
+            var factory = ApiFactoryBuilder.Build(config.NotificationsUrl, tokenProvider);
             var api = factory.Api<ApplicationMetadataApi>();
             ResourceListOfAccessControlledResource resources = api.ListAccessControlledResources();
             Assert.IsNotNull(resources);
