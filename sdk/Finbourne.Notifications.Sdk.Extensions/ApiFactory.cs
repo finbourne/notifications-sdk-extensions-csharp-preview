@@ -35,18 +35,31 @@ namespace Finbourne.Notifications.Sdk.Extensions
             if (apiConfiguration == null) throw new ArgumentNullException(nameof(apiConfiguration));
 
             // Validate Uris
-            if (!Uri.TryCreate(apiConfiguration.TokenUrl, UriKind.Absolute, out var _))
+            // note: could employ a factory pattern here to create ITokenProvider in case more branching is required in the future:
+            ITokenProvider tokenProvider;
+            if (!string.IsNullOrWhiteSpace(apiConfiguration.PersonalAccessToken)) // the personal access token takes precedence over other methods of authentication
             {
-                throw new UriFormatException($"Invalid Token Uri: {apiConfiguration.TokenUrl}");
+                tokenProvider = new PersonalAccessTokenProvider(apiConfiguration.PersonalAccessToken);
+            }
+            else {
+                if (!Uri.TryCreate(apiConfiguration.TokenUrl, UriKind.Absolute, out var _))
+                {
+                    throw new UriFormatException($"Invalid Token Uri: {apiConfiguration.TokenUrl}");
+                }
+                tokenProvider = new ClientCredentialsFlowTokenProvider(apiConfiguration); 
             }
 
             if (!Uri.TryCreate(apiConfiguration.NotificationsUrl, UriKind.Absolute, out var _))
             {
+                if (string.IsNullOrWhiteSpace(apiConfiguration.NotificationsUrl))
+                    throw new ArgumentNullException(
+                        nameof(apiConfiguration.NotificationsUrl),
+                        $"Notifications Uri missing. Please specify either FBN_NOTIFICATIONS_API_URL environment variable or notificationsUrl in secrets.json.");
+
                 throw new UriFormatException($"Invalid Uri: {apiConfiguration.NotificationsUrl}");
             }
 
             // Create configuration
-            var tokenProvider = new ClientCredentialsFlowTokenProvider(apiConfiguration);
             var configuration = new TokenProviderConfiguration(tokenProvider)
             {
                 BasePath = apiConfiguration.NotificationsUrl,
