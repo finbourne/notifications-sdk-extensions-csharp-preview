@@ -27,6 +27,7 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
 
         private readonly Notification _mockResponse = new Notification("id",
             "description",
+            "displayName",
             "deliveryChannel",
             new Dictionary<string, object>() { { "receipient", null } },
             new Dictionary<string, object>() { { "content", null } },
