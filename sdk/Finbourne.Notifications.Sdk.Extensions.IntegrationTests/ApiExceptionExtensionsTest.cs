@@ -132,8 +132,8 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
         {
             try
             {
-                var testScope = new string('a', 100);
-                var testCode = new string('b', 100);
+                var testScope = new string('a', 101);
+                var testCode = new string('b', 101);
                 var _ = _factory.Api<NotificationsApi>().CreateEmailNotification(testScope, testCode, _emailNotification);
             }
             catch (ApiException e)
@@ -145,11 +145,11 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
                 {
                     //Should identify that there was a validation error with the code
                     Assert.That(errorResponse.Errors, Contains.Key("code"));
-                    Assert.That(errorResponse.Errors["code"].Single(), Is.EqualTo("Values for the field code must be non-zero in length and have no more than 64 characters. For more information please consult the documentation."));
+                    Assert.That(errorResponse.Errors["code"].Single(), Is.EqualTo("Values for the field code must be non-zero in length and have no more than 100 characters. For more information please consult the documentation."));
 
                     //Should identify that there was a validation error with the scope
                     Assert.That(errorResponse.Errors, Contains.Key("scope"));
-                    Assert.That(errorResponse.Errors["scope"].Single(), Is.EqualTo("Values for the field scope must be non-zero in length and have no more than 64 characters. For more information please consult the documentation."));
+                    Assert.That(errorResponse.Errors["scope"].Single(), Is.EqualTo("Values for the field scope must be non-zero in length and have no more than 100 characters. For more information please consult the documentation."));
 
                     Assert.That(errorResponse.Detail, Does.Match("One or more elements of the request were invalid.*"));
                     Assert.That(errorResponse.Name, Is.EqualTo("InvalidRequestFailure"));
