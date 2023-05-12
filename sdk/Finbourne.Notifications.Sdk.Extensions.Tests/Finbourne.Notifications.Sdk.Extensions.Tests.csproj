@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>0.222.0-v2</Version>
+    <Version>0.223.0-v2</Version>
     <IsPackable>false</IsPackable>
     <PackageId>Finbourne.Notifications.Sdk.Extensions.Tests</PackageId>
     <Authors>engineering@finbourne.com</Authors>
