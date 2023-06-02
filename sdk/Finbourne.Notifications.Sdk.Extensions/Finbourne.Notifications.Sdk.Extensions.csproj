@@ -11,6 +11,7 @@
     <RepositoryType>git</RepositoryType>
     <DocumentationFile></DocumentationFile>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <PackageId>Finbourne.Notification.Sdk.Extensions</PackageId>
   </PropertyGroup>
   <ItemGroup>
     <None Include="../../LICENSE.md" Pack="true" PackagePath="LICENSE.md" />
