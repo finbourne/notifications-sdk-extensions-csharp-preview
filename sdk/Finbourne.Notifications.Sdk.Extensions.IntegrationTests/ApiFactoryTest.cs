@@ -28,10 +28,10 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
         [Test]
         public void Create_EventsApi()
         {
-            var api = _factory.Api<EventsApi>();
+            var api = _factory.Api<ManualEventApi>();
 
             Assert.That(api, Is.Not.Null);
-            Assert.That(api, Is.InstanceOf<EventsApi>());
+            Assert.That(api, Is.InstanceOf<ManualEventApi>());
         }
 
         [Test]

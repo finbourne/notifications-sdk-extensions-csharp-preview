@@ -7,6 +7,7 @@ using System.Diagnostics;
 using Finbourne.Notifications.Sdk.Api;
 using Finbourne.Notifications.Sdk.Client;
 using Finbourne.Notifications.Sdk.Model;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using Polly;
 using RestSharp;
@@ -20,18 +21,20 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
     public class PollyApiRetryHandlerTests
     {
         private ApiFactory _apiFactory;
-        private readonly Policy<IRestResponse> _initialRetryPolicy = RetryConfiguration.RetryPolicy;
+        private readonly Policy<RestResponse> _initialRetryPolicy = RetryConfiguration.RetryPolicy;
         private HttpListener _httpListener;
         private const string ListenerUriPrefix = "http://localhost:4446/";
         private int _apiCallCount;
 
         private readonly Notification _mockResponse = new Notification("id",
-            "description",
             "displayName",
-            "deliveryChannel",
-            new Dictionary<string, object>() { { "receipient", null } },
-            new Dictionary<string, object>() { { "content", null } },
-            new NotificationStatus("result", DateTimeOffset.UtcNow),
+            "description",
+            new JObject
+            {
+                { "type", "sms" },
+                { "body", "Some SMS Message" },
+                { "recipients", new JArray { "+447700000000" } }
+            },
             DateTimeOffset.UtcNow,
             "createdBy",
             DateTimeOffset.UtcNow,
@@ -188,7 +191,7 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
             var retryCount = 0;
             // Polly retry policy with a backoff example
             RetryConfiguration.RetryPolicy = Policy
-                .HandleResult<IRestResponse>(apiResponse =>
+                .HandleResult<RestResponse>(apiResponse =>
                     apiResponse.StatusCode == (HttpStatusCode)returnedStatusCode)
                 .WaitAndRetry(expectedNumberOfRetries,
                     sleepDurationProvider: retryAttempt => 0.1 * TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
@@ -236,7 +239,7 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
 
             RetryConfiguration.RetryPolicy = PollyApiRetryHandler.DefaultFallbackPolicy.Wrap(
                 Policy
-                    .HandleResult<IRestResponse>(response => response.StatusCode == 0)
+                    .HandleResult<RestResponse>(response => response.StatusCode == 0)
                     .Retry(retryCount: 2, onRetry: (response, count, ctx) => { })
             );
 
@@ -267,11 +270,11 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
             var policy1TriggerCount = 0;
             var policy2TriggerCount = 0;
             var policy1 = Policy
-                .HandleResult<IRestResponse>(apiResponse =>
+                .HandleResult<RestResponse>(apiResponse =>
                     apiResponse.StatusCode == (HttpStatusCode)statusCodeResponse1)
                 .Retry(retryCount: 3, onRetry: (result, i) => policy1TriggerCount++);
             var policy2 = Policy
-                .HandleResult<IRestResponse>(apiResponse =>
+                .HandleResult<RestResponse>(apiResponse =>
                     apiResponse.StatusCode == (HttpStatusCode)statusCodeResponse2)
                 .Retry(retryCount: 3, onRetry: (result, i) => policy2TriggerCount++);
             RetryConfiguration.RetryPolicy = policy1.Wrap(policy2);
@@ -529,7 +532,7 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
 
             RetryConfiguration.AsyncRetryPolicy = PollyApiRetryHandler.DefaultFallbackPolicyAsync.WrapAsync(
                 Policy
-                    .HandleResult<IRestResponse>(response => response.StatusCode == 0)
+                    .HandleResult<RestResponse>(response => response.StatusCode == 0)
                     .RetryAsync(retryCount: 2, onRetry: (response, count, ctx) => { })
             );
 

@@ -22,7 +22,7 @@ namespace Finbourne.Notifications.Sdk.Extensions.Tests
         [Test]
         public void CreateApiFactory_WhenRetryPolicyIsAlreadyAssigned_ExistingRetryPolicyIsUsed()
         {
-            var testPolicy = Policy.HandleResult<IRestResponse>(response => true).Retry();
+            var testPolicy = Policy.HandleResult<RestResponse>(response => true).Retry();
 
             RetryConfiguration.RetryPolicy = testPolicy;
             var newFactory = new ApiFactory(new Client.Configuration());
@@ -45,7 +45,7 @@ namespace Finbourne.Notifications.Sdk.Extensions.Tests
         [Test]
         public void CreateApiFactory_WhenRetryPolicyIsAlreadyAssigned_ExistingAsyncRetryPolicyIsUsed()
         {
-            var testPolicy = Policy.HandleResult<IRestResponse>(response => true).RetryAsync();
+            var testPolicy = Policy.HandleResult<RestResponse>(response => true).RetryAsync();
 
             RetryConfiguration.AsyncRetryPolicy = testPolicy;
             var newFactory = new ApiFactory(new Client.Configuration());

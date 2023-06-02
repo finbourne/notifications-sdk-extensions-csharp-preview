@@ -13,17 +13,19 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
     public class ApiExceptionExtensionsTest
     {
         private IApiFactory _factory;
-        private CreateEmailNotification _emailNotification;
+        private EmailNotificationType _emailNotification;
 
         [OneTimeSetUp]
         public void SetUp()
         {
             _factory = IntegrationTestApiFactoryBuilder.CreateApiFactory("secrets.json");
-            _emailNotification = new CreateEmailNotification("description",
+            _emailNotification = new EmailNotificationType(
+                "Email",
                 "subject",
                 "plainTextBody",
                 "htmlBody",
-                new List<string>() { "to-unknown@unkown.com" }, new List<string>(), new List<string>());
+                new List<string>() { "to-unknown@unknown.com" },
+                new List<string>(), new List<string>());
         }
         
         [Test]
@@ -31,7 +33,9 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
         {
             try
             {
-                _factory.Api<EventsApi>().CreateEvent("$@!-");
+                _factory.Api<ManualEventApi>().TriggerManualEvent(
+                    new ManualEventRequest(
+                        new ManualEventBody(subject: "subject", message: "$@!-")));
             }
             catch (ApiException e)
             {
@@ -44,7 +48,9 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
         {
             try
             {
-                _factory.Api<EventsApi>().CreateEvent("$@!-");
+                _factory.Api<ManualEventApi>().TriggerManualEvent(
+                    new ManualEventRequest(
+                        new ManualEventBody(subject: "subject", message: "$@!-")));
             }
             catch (ApiException e)
             {
@@ -68,7 +74,9 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
         {
             try
             {
-                _factory.Api<EventsApi>().CreateEvent("$@!-");
+                _factory.Api<ManualEventApi>().TriggerManualEvent(
+                    new ManualEventRequest(
+                        new ManualEventBody(subject: "subject", message: "$@!-")));
             }
             catch (ApiException e)
             {
@@ -83,7 +91,14 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
         {
             try
             {
-                _factory.Api<NotificationsApi>().CreateEmailNotification("no-scope", "no-code", _emailNotification);
+                _factory.Api<NotificationsApi>().CreateNotification(
+                    "no-scope",
+                    "no-code",
+                    new CreateNotificationRequest(
+                        "some-id",
+                        "some-display-name",
+                        "some-description",
+                        new CreateNotificationRequestNotificationType(_emailNotification)));
             }
             catch (ApiException e)
             {
@@ -98,7 +113,14 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
         {
             try
             {
-                _factory.Api<NotificationsApi>().CreateEmailNotification("@£$@£%", "#####", _emailNotification);
+                _factory.Api<NotificationsApi>().CreateNotification(
+                    "@£$@£%",
+                    "#####",
+                    new CreateNotificationRequest(
+                        "some-id",
+                        "some-display-name",
+                        "some-description",
+                        new CreateNotificationRequestNotificationType(_emailNotification)));
             }
             catch (ApiException e)
             {
@@ -134,7 +156,15 @@ namespace Finbourne.Notifications.Sdk.Extensions.IntegrationTests
             {
                 var testScope = new string('a', 101);
                 var testCode = new string('b', 101);
-                var _ = _factory.Api<NotificationsApi>().CreateEmailNotification(testScope, testCode, _emailNotification);
+                
+                _factory.Api<NotificationsApi>().CreateNotification(
+                    testScope,
+                    testCode,
+                    new CreateNotificationRequest(
+                        "some-id",
+                        "some-display-name",
+                        "some-description",
+                        new CreateNotificationRequestNotificationType(_emailNotification)));
             }
             catch (ApiException e)
             {
