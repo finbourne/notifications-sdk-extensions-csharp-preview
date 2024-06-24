@@ -1,5 +1,7 @@
+![LUSID_by_Finbourne](./resources/Finbourne_Logo_Teal.svg)
+
+
 # LUSID<sup>®</sup> Notifications SDK Extensions C#
-![LUSID by Finbourne](https://content.finbourne.com/LUSID_repo.png)
 
 These are the C# SDK Extensions to accompany the [C# SDK (Preview) for the Notification application](https://github.com/finbourne/notifications-sdk-csharp-preview). The Notification application provides notifications via email, SMS or webhook when LUSID events occur.
 
