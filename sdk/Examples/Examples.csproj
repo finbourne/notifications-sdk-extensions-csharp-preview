@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Finbourne.Notifications.Sdk.Extensions\Finbourne.Notifications.Sdk.Extensions.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Finbourne.Notifications.Sdk.Preview" Version="0.1.274" />
+    </ItemGroup>
+
+</Project>
+
